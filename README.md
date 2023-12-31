@@ -30,3 +30,13 @@ A command line two-player chess game built as part of "The Odin Project" curricu
 1. What is a legal move?
 2. When is something in check
 3. When is something in checkmate
+
+### Creating the Pieces Class
+1. Add position
+2. Add color
+
+### Creating the SubPieces Class
+
+1. Add piece type
+2. Add potential moves
+

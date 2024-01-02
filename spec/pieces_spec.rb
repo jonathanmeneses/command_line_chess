@@ -20,10 +20,30 @@ describe Pawn do
   end
 
   describe '#potential_moves' do
-    context 'when a pawn is in the initial row' do
-      xit 'moves in a positive direction' do
+
+    context 'when a white pawn is in the initial row' do
+      let(:pawn) { described_class.new(:white,[1,1]) }
+      it 'moves in a positive direction' do
+        potential_moves = pawn.potential_moves
+        potential_moves.each do |x,y|
+          expect(y).to be > pawn.position[1]
+        end
       end
-      xit 'has 2 and 1 jumpts available' do
+      it 'has 2 and 1 jumps available' do
+        potential_moves = pawn.potential_moves
+        potential_moves.each do |x,y|
+          y_length = (y-pawn.position[1]).abs
+          expect([1,2]).to include(y_length)
+        end
+      end
+    end
+    context 'when a black pawn is in the initial row' do
+      let(:pawn) { described_class.new(:black,[1,6]) }
+      it 'moves in a negative direction' do
+        potential_moves = pawn.potential_moves
+        potential_moves.each do |x,y|
+          expect(y).to be < pawn.position[1]
+        end
       end
     end
   end

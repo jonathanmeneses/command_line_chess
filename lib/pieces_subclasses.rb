@@ -7,8 +7,8 @@ require_relative '../lib/piece'
 class Pawn < Piece
   attr_accessor :position, :color
 
-  def initialize(position,color)
-    super(position, color)
+  def initialize(color, position)
+    super(color, position)
   end
 
   def potential_moves()
@@ -18,12 +18,13 @@ class Pawn < Piece
     forward_steps = initial_row? ? 2 : 1
     direction = color == :white ? 1 : -1
 
+    #forward moves
     1.upto(forward_steps) do |step|
       moves << [position[0], position[1] + step * direction]
     end
-
-    moves << [position[0] + 1, position[1] + step * direction]
-    moves << [position[0] - 1, position[1] + step * direction]
+    #diagonal and au passant moves
+    moves << [position[0] + 1, position[1] +  direction]
+    moves << [position[0] - 1, position[1] +  direction]
 
     moves.select {|x,y| x.between?(0,7) && y.between?(0,7)}
   end

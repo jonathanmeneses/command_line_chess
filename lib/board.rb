@@ -40,4 +40,12 @@ class Board
 
     alpha_map[x] + (y+1).to_s
   end
+
+  def alphanumeric_to_array_notation(space)
+    unless space.length == 2 && alpha_map.include?(space[0]) && space[1].to_i < grid.length
+      raise ArgumentError, 'Alphanumeric space is not 2 characters'
+    end
+
+    [alpha_map.index(space[0]), (space[1].to_i - 1)]
+  end
 end

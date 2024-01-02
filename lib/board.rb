@@ -4,10 +4,11 @@ require 'pry-byebug'
 
 # Board class for chess
 class Board
-  attr_accessor :grid
+  attr_accessor :grid, :alpha_map
 
   def initialize
     @grid = Array.new(8) { Array.new(8, nil) }
+    @alpha_map = ("a".."h").to_a
   end
 
   def display_board
@@ -32,4 +33,11 @@ class Board
     @grid[y][x] = piece
   end
 
+  def array_to_alphanumeric_notation(x,y)
+    if x.negative? || y.negative? || x > (grid[0].length - 1) || y > (grid.length - 1)
+      raise RangeError, 'Array columns out of range'
+    end
+
+    alpha_map[x] + (y+1).to_s
+  end
 end

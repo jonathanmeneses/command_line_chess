@@ -39,4 +39,37 @@ describe Board do
       end
     end
   end
+
+  describe '#alphanumeric_to_array_notation' do
+    subject(:board) {described_class.new}
+
+    context 'when a valid alphanumeric location is passed' do
+      xit 'returns a valid array row & column combination' do
+      end
+    end
+
+    context 'when an invalid alphanumeric location is passed' do
+      xit 'returns an error' do
+      end
+    end
+  end
+
+  describe '#array_to_alphanumeric_notation' do
+    subject(:board) {described_class.new}
+
+    context 'when a valid array location is passed' do
+      xit 'returns a valid alphanumeric location' do
+        expect(board.array_to_alphanumeric_notation(0,0)).to eq('a1')
+      end
+    end
+
+    context 'when an invalid array location is passed' do
+      it 'returns an error' do
+        expect(board.array_to_alphanumeric_notation(12,2)).to raise_error(RangeError)
+      end
+      xit 'returns an error' do
+        expect(board.array_to_alphanumeric_notation(1,12)).to raise_error(RangeError)
+      end
+    end
+  end
 end

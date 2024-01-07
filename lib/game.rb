@@ -1,11 +1,12 @@
 # frozen_string_literal: true
+# rubocop:disable Metrics/MethodLength
 
 require 'pry-byebug'
 
-require_relative '../lib/board', '/..lib/piece', '/..lib/pieces_subclasses'
+require_relative '../lib/board', '/../lib/piece', '/../lib/pieces_subclasses'
 
 class Game
-  attr_accessor :board, playing
+  attr_accessor :board, :playing
   def initalize(board)
     @board = board
     @playing = true
@@ -21,28 +22,43 @@ class Game
     # Castling / Au Passant
     case piece.class.name
     when Pawn
-      #obstruction for forward move
+      # obstruction for forward move
       if piece.position[0] == target_x
         pawn_forward_move_valid?(piece, target_x, target_y)
-      elsif # Need to check if the target x and y deltas vs current position == 1
-        # Then implement the "pawn capture" check!
+      elsif (target_x - piece.position[0]).abs == 1 && (target_y - piece.position[1]).abs == 1
+        pawn_capture_move_valid?(piece, target_x, target_y)
         # I think i can also use this for en passant as well, but would need to know about the last move of the piece next to it
         # Also need to check
+      else
+        false
+      end
 
 
     end
-
   end
+
 
   private
 
   def pawn_forward_move_valid?(piece, target_x, target_y)
-    if piece.color == :white
-      path_range = (piece.position[1] + 1)...target_y
-    else
-      (target_y + 1)...piece.position[1]
-    end
+    path_range = if piece.color == :white
+                   (piece.position[1] + 1)...target_y
+                 else
+                   (target_y + 1)...piece.position[1]
+                 end
     path_range.all? { |y| board[y][target_x].nil? }
+  end
+
+  def pawn_capture_move_valid(piece, target_x, target_y)
+    if board[target_y][target_x]
+      if piece.color == :white
+        board[target_y][target_x].color == :black
+      elsif piece.color == :black
+        board[target_y][target_x].color == :white
+      end
+    else
+      false
+    end
   end
 
 end

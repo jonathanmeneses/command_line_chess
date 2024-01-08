@@ -1,9 +1,11 @@
 # frozen_string_literal: true
-# rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+# rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/ClassLength
 
 require 'pry-byebug'
 
-require_relative '../lib/board', '/../lib/piece', '/../lib/pieces_subclasses'
+require_relative '../lib/board'
+require_relative '../lib/piece'
+require_relative '../lib/pieces_subclasses'
 
 class Game
   attr_accessor :board, :playing
@@ -12,7 +14,16 @@ class Game
     @playing = true
   end
 
-  def valid_move(piece, target_move)
+  def move_piece(piece, target_move)
+    (target_x, target_y) = target_move
+    if valid_move?(piece, target_move)
+      board.update_board_square(piece.position[0], piece.position[1],nil)
+      board.update_board_square(target_x,target_y,piece)
+      piece.position = [target_x, target_y]
+    end
+  end
+
+  def valid_move?(piece, target_move)
     (target_x, target_y) = target_move
     #checks to build:
     # Obstruction
@@ -31,7 +42,7 @@ class Game
     when Queen
       queen_move_valid?(piece, target_x, target_y)
     when King
-      pass
+      king_move_valid?(piece, target_x, target_y)
     end
   end
 
@@ -83,7 +94,7 @@ class Game
   end
 
   def rook_move_valid?(piece, target_x, target_y)
-    #doesn't account for castling
+    # doesn't account for castling
     straight_path_clear?(piece, target_x, target_y) &&
       (capture_move_valid?(piece, target_x, target_y) || board[target_y][target_x].nil?)
   end
@@ -131,6 +142,8 @@ class Game
     path_clear && (capture_move_valid?(piece, target_x, target_y) || board[target_y][target_x].nil?)
   end
 
-
+  def king_move_valid?(piece, target_x, target_y)
+    (capture_move_valid?(piece, target_x, target_y) || board[target_y][target_x].nil?)
+  end
 
 end

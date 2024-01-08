@@ -5,10 +5,11 @@
 require_relative '../lib/piece'
 
 class Pawn < Piece
-  attr_accessor :position, :color
+  attr_accessor :position, :color, :display_icon
 
-  def initialize(color, position)
-    super(color, position)
+  def initialize(position, color)
+    super(position, color)
+    @display_icon = color == :white ? 'P' : 'p'
   end
 
   def potential_moves()
@@ -22,7 +23,7 @@ class Pawn < Piece
     1.upto(forward_steps) do |step|
       moves << [position[0], position[1] + step * direction]
     end
-    #diagonal and au passant moves
+    #diagonal and en passant moves
     moves << [position[0] + 1, position[1] +  direction]
     moves << [position[0] - 1, position[1] +  direction]
 
@@ -38,10 +39,11 @@ class Pawn < Piece
 end
 
 class Bishop < Piece
-  attr_accessor :position, :color
+  attr_accessor :position, :color, :display_icon
 
-  def initialize(position,color)
+  def initialize(position, color)
     super(position, color)
+    @display_icon = color == :white ? '♝' : 'b'
   end
 
   def potential_moves()

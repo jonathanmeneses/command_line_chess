@@ -7,6 +7,7 @@ class Board
   attr_accessor :grid, :alpha_map
 
   def initialize
+    # A1 is "top left" and H8 is "bottom right"
     @grid = Array.new(8) { Array.new(8, nil) }
     @alpha_map = ("a".."h").to_a
   end
@@ -17,7 +18,7 @@ class Board
     @grid.each_with_index do |row, index|
       print_view = " #{index+1} |"
       row.each do |cell|
-        print_view += (cell.nil? ? '   |' : " #{cell} |")
+        print_view += (cell.nil? ? '   |' : " #{cell.display_icon} |")
       end
       puts print_view
     end

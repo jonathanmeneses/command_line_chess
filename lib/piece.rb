@@ -5,7 +5,7 @@ class Piece
 
   def initialize(position ,color)
     @color = color
-    #location is array [x,y] location
+    #location is array [x,y] location with [0,0] being "A1"
     @position = position
   end
 

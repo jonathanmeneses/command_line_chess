@@ -41,23 +41,23 @@ describe Board do
   end
 
   describe '#alphanumeric_to_array_notation' do
-    subject(:board) {described_class.new}
+    subject(:board) { described_class.new }
 
     context 'when a valid alphanumeric location is passed' do
       it 'returns a valid array row & column combination' do
         expect(board.alphanumeric_to_array_notation('a1'))
-          .to eq([0,0])
+          .to eq([0, 0])
       end
 
       it 'returns a valid array row & column combination' do
         expect(board.alphanumeric_to_array_notation('c3'))
-          .to eq([2,2])
+          .to eq([2, 2])
       end
     end
 
     context 'when an invalid alphanumeric location is passed' do
       it 'returns an error' do
-        expect {board.alphanumeric_to_array_notation(10,1)}
+        expect { board.alphanumeric_to_array_notation(10, 1) }
           .to raise_error(ArgumentError)
       end
       it 'returns an error' do

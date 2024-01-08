@@ -15,8 +15,9 @@ class Board
   def display_board
     puts '   | A | B | C | D | E | F | G | H |'
     puts '------------------------------------'
-    @grid.each_with_index do |row, index|
-      print_view = " #{index+1} |"
+    @grid.reverse.each_with_index do |row, index|
+      row_number = 8 - index
+      print_view = " #{row_number} |"
       row.each do |cell|
         print_view += (cell.nil? ? '   |' : " #{cell.display_icon} |")
       end

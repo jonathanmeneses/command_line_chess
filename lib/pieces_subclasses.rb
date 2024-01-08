@@ -4,6 +4,7 @@
 
 require_relative '../lib/piece'
 
+# Pawn Piece
 class Pawn < Piece
   attr_accessor :position, :color, :display_icon
 
@@ -43,7 +44,7 @@ class Bishop < Piece
 
   def initialize(position, color)
     super(position, color)
-    @display_icon = color == :white ? '♝' : 'b'
+    @display_icon = color == :white ? 'B' : 'b'
   end
 
   def potential_moves()
@@ -61,10 +62,11 @@ class Bishop < Piece
 end
 
 class Knight < Piece
-  attr_accessor :position, :color
+  attr_accessor :position, :color, :display_icon
 
-  def initialize(position,color)
+  def initialize(position, color)
     super(position, color)
+    @display_icon = color == :white ? 'N' : 'n'
   end
 
   def potential_moves()
@@ -80,32 +82,9 @@ end
 class Rook < Piece
   attr_accessor :position, :color
 
-  def initialize(position,color)
+  def initialize(position, color)
     super(position, color)
-  end
-
-  def potential_moves()
-    #shows moves in array format
-    moves = []
-
-    1.upto(7) do |step|
-      moves << [position[0] + step, position[1]]
-      moves << [position[0] - step, position[1]]
-      moves << [position[0], position[1] + step]
-      moves << [position[0], position[1] - step]
-    end
-
-    moves.select {|x,y| x.between?(0,7) && y.between?(0,7)}
-  end
-
-end
-
-class Rook < Piece
-  #still need to introduce castling
-  attr_accessor :position, :color
-
-  def initialize(position,color)
-    super(position, color)
+    @display_icon = color == :white ? 'R' : 'R'
   end
 
   def potential_moves()
@@ -128,8 +107,9 @@ class King < Piece
   #still need to introduce castling
   attr_accessor :position, :color
 
-  def initialize(position,color)
+  def initialize(position, color)
     super(position, color)
+    @display_icon = color == :white ? 'K' : 'k'
   end
 
   def potential_moves()
@@ -146,8 +126,9 @@ end
 class Queen < Piece
   attr_accessor :position, :color
 
-  def initialize(position,color)
+  def initialize(position, color)
     super(position, color)
+    @display_icon = color == :white ? 'Q' : 'q'
   end
 
   def potential_moves()
@@ -155,13 +136,13 @@ class Queen < Piece
     moves = []
 
     move_vectors = [[1, 1], [1, -1], [-1, 1], [-1, -1], [1,0],[-1,0],[0,1],[0,-1]]
-    move_vectors.each do |x,y|
+    move_vectors.each do |x, y|
       1.upto(7) do |step|
-        moves <<  [position[0] + x*step, position[1] + y*step]
+        moves << [position[0] + x * step, position[1] + y * step]
       end
     end
 
-    moves.select {|x,y| x.between?(0,7) && y.between?(0,7)}
+    moves.select { |x,y| x.between?(0, 7) && y.between?(0, 7) }
   end
 
 end

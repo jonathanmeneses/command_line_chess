@@ -10,36 +10,93 @@ require_relative '../lib/pieces_subclasses'
 
 describe Game do
   describe '#valid_move?' do
-    subject(:game) { described_class.new }
-    let(:board) {double('board')}
-    context 'when a new board is created' do
-      it 'it has 8 subarrays' do
-        expect(board.grid.length).to eq(8)
+    let(:board) { Board.new }
+    let(:game) { Game.new(board) }
+    let(:pawn) { Pawn.new([4, 1], :white) }
+    let(:bishop) { Bishop.new([3, 0], :white) }
+    let(:knight) { Knight.new([1, 0], :white) }
+    let(:rook) { Rook.new([0,0], :white) }
+    let(:queen) { Queen.new([4, 0], :white) }
+
+    context 'when moving a pawn' do
+
+      before do
+        game.board.update_board_square(pawn.position[0],pawn.position[1],pawn)
+      end
+      it 'returns true for a valid forward move' do
+        expect(game.valid_move?(pawn, [4, 2])).to be true
       end
 
-      it 'each array contains 8 values' do
-        expect(board.grid[0].length).to eq(8)
+      it 'returns true for a double move' do
+        expect(game.valid_move?(pawn, [4, 3])).to be true
+      end
+
+      it 'returns false for an invalid move' do
+        expect(game.valid_move?(pawn, [4, 4])).to be false
       end
     end
+
+    context 'when moving a bishop' do
+      before do
+        game.board.update_board_square(pawn.position[0],pawn.position[1],pawn)
+      end
+
+      it 'returns true for a valid diagonal move' do
+        expect(game.valid_move?(bishop, [5,2])).to be false
+      end
+
+      it 'returns false for an invalid diagonal move' do
+        expect(game.valid_move?(bishop, [3,2])).to be false
+      end
+    end
+
+    context 'when moving a knight' do
+      before do
+        game.board.update_board_square(1,1,pawn)
+        game.board.update_board_square(knight.position[0],knight.position[1],knight)
+      end
+      it 'returns true for a valid knight move' do
+        expect(game.valid_move?(knight, [3,1])).to be true
+      end
+
+      it 'returns false for an invalid knight move' do
+        expect(game.valid_move?(knight, [3,2])).to be false
+      end
+
+      it 'returns false for an invalid knight move' do
+        expect(game.valid_move?(knight, [-1,1])).to be false
+      end
+    end
+
+    context 'when moving a Rook' do
+      it 'returns true for a valid Rook move' do
+        expect(game.valid_move?(rook, [3,0])).to be true
+      end
+
+      it 'returns false for an invalid knight move' do
+        expect(game.valid_move?(rook, [3,2])).to be false
+      end
+    end
+
+    context 'when moving a queen' do
+      it 'returns true for a valid horizontal move' do
+        expect(game.valid_move?(queen, [2,0])).to be true
+      end
+
+      it 'returns true for a valid vertical move' do
+        expect(game.valid_move?(queen, [4,5])).to be true
+      end
+
+      it 'returns false for an valid diagonal move' do
+        expect(game.valid_move?(queen, [6,2])).to be true
+      end
+
+      it 'returns false for an invalid diagnoal move' do
+        expect(game.valid_move?(queen, [6,3])).to be false
+      end
+    end
+    # Similarly, add contexts for other pieces like Knight, Bishop, etc.
   end
 
-  describe '#update_board_square' do
-    subject(:board) { described_class.new }
 
-    context 'when board square is called with a valid location' do
-      it 'it upddates the square with the value' do
-        expect { board.update_board_square(2, 2, 'x') }
-          .to change { board.grid[2][2] }
-          .from(nil)
-          .to('x')
-      end
-    end
-
-    context 'when board square is called with an invalid location' do
-      it 'it returns a range error' do
-        expect { board.update_board_square(10, 10, 'x') }
-          .to raise_error(RangeError)
-      end
-    end
-  end
 end

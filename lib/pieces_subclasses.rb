@@ -53,7 +53,9 @@ class Bishop < Piece
 
     1.upto(7) do |step|
       moves << [position[0] + step, position[1] + step]
+      moves << [position[0] + step, position[1] - step]
       moves << [position[0] - step, position[1] - step]
+      moves << [position[0] - step, position[1] + step]
     end
 
     moves.select {|x,y| x.between?(0,7) && y.between?(0,7)}
@@ -105,7 +107,7 @@ end
 
 class King < Piece
   #still need to introduce castling
-  attr_accessor :position, :color
+  attr_accessor :position, :color, :display_icon
 
   def initialize(position, color)
     super(position, color)

@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-# rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/ClassLength
+# rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/ClassLength, Metrics/CyclomaticComplexity
 
 require 'pry-byebug'
 
@@ -8,10 +8,11 @@ require_relative '../lib/piece'
 require_relative '../lib/pieces_subclasses'
 
 class Game
-  attr_accessor :board, :playing
+  attr_accessor :board, :playing, :simulated_board
 
   def initialize(board)
     @board = board
+    @simulated_board = nil
     @playing = true
     @white_check = false
     @black_check = false
@@ -35,28 +36,53 @@ class Game
     # Check
     # Pawn Move
     # Castling / Au Passant
-    case piece.class.name
-    when 'Pawn'
-      pawn_move_valid?(piece,target_x, target_y)
-    when 'Knight'
-      knight_move_valid?(piece, target_x, target_y)
-    when 'Bishop'
-      bishop_move_valid?(piece, target_x, target_y)
-    when 'Rook'
-      rook_move_valid?(piece, target_x, target_y)
-    when 'Queen'
-      queen_move_valid?(piece, target_x, target_y)
-    when 'King'
-      king_move_valid?(piece, target_x, target_y)
+    return piece.potential_moves.include?(target_move) &&
+           case piece.class.name
+           when 'Pawn'
+             pawn_move_valid?(piece,target_x, target_y)
+           when 'Knight'
+             knight_move_valid?(piece, target_x, target_y)
+           when 'Bishop'
+             bishop_move_valid?(piece, target_x, target_y)
+           when 'Rook'
+             rook_move_valid?(piece, target_x, target_y)
+           when 'Queen'
+             queen_move_valid?(piece, target_x, target_y)
+           when 'King'
+             king_move_valid?(piece, target_x, target_y)
+           else
+             false
+           end
+  end
+
+  def color_in_check?(color, board)
+    king = locate_king(color, board)
+    king_in_check?(color, king, board)
+  end
+
+
+
+
+  def locate_king(color, board)
+    board.grid.each do |row|
+      row.each do |cell|
+        if !cell.nil? && cell.instance_of?(::King) && cell.color == color
+          return cell
+        end
+      end
+    end
+    return nil
+  end
+
+  def king_in_check?(color, king, board)
+    board.grid.any? do |row|
+      row.any? do |piece|
+        !piece.nil? && piece.color != color && valid_move?(piece, king.position)
+      end
     end
   end
 
-  def update_check_status
-    pass
-  end
 
-
-  private
 
   def pawn_forward_move_valid?(piece, target_x, target_y)
     path_range = if piece.color == :white
@@ -143,7 +169,7 @@ class Game
   end
 
   def queen_move_valid?(piece, target_x, target_y)
-    path_clear = if piece.position[x] == target_x || piece.position[y] == target_y
+    path_clear = if piece.position[0] == target_x || piece.position[1] == target_y
                    straight_path_clear?(piece, target_x, target_y)
                  else
                    diagonal_path_clear?(piece, target_x, target_y)

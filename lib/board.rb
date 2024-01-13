@@ -7,7 +7,7 @@ class Board
   attr_accessor :grid, :alpha_map
 
   def initialize
-    # A1 is "top left" and H8 is "bottom right"
+    # A8 is "top left" and H1 is "bottom right"
     @grid = Array.new(8) { Array.new(8, nil) }
     @alpha_map = ("a".."h").to_a
   end

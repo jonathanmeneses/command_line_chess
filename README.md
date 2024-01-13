@@ -30,6 +30,7 @@ A command line two-player chess game built as part of "The Odin Project" curricu
 1. What is a legal move?
 2. When is something in check
 3. When is something in checkmate
+    a. Checkmate is when there are no valid moves remaining for a team that is in check
 
 ### Creating the Pieces Class
 1. Add position

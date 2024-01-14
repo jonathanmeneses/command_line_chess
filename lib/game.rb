@@ -60,10 +60,15 @@ class Game
     king_in_check?(color, king, board)
   end
 
+  def create_simulated_board
+    @simulated_board = board.deep_clone
+  end
+
   def move_place_player_in_check?(piece, target_x, target_y)
-    simulated_board = board.clone
-    simulated_board.move_piece([target_x, target_y], piece)
-    color_in_check?(piece.color,simulated_board)
+    create_simulated_board
+    simulated_piece = piece.clone
+    move_piece(simulated_piece, [target_x, target_y], simulated_board)
+    color_in_check?(simulated_piece.color,simulated_board)
   end
 
 

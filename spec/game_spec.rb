@@ -183,15 +183,27 @@ describe Game do
     let(:pawn) { Pawn.new([1,1], :white) }
     let(:b_bishop) { Bishop.new([3, 2], :black) }
 
-    context 'when a move does place a king in check' do
-      before do
+     before do
         game.board.update_board_square(pawn.position[0],pawn.position[1],pawn)
         game.board.update_board_square(king.position[0],king.position[1],king)
         game.board.update_board_square(b_bishop.position[0],b_bishop.position[1],b_bishop)
       end
 
+    context 'when a move does place a king in check' do
+      # before do
+      #   game.board.update_board_square(pawn.position[0],pawn.position[1],pawn)
+      #   game.board.update_board_square(king.position[0],king.position[1],king)
+      #   game.board.update_board_square(b_bishop.position[0],b_bishop.position[1],b_bishop)
+      # end
+
       it 'returns true' do
         expect(game.move_place_player_in_check?(king,1,0)).to be true
+      end
+    end
+
+    context 'when a move does not place a king in check' do
+      it 'returns false' do
+        expect(game.move_place_player_in_check?(king,0,1)).to be false
       end
     end
   end

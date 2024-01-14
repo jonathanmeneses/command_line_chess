@@ -117,7 +117,7 @@ class King < Piece
   def potential_moves()
     #shows moves in array format
 
-    move_vectors = [[1, 1], [1, -1], [-1, 1], [-1, -1]]
+    move_vectors = [[1, 1], [1, -1], [-1, 1], [-1, -1], [1, 0], [-1, 0], [-1, 1], [0, -1]]
     moves = move_vectors.map { |x, y| [position[0] + x, position[1] + y] }
 
     moves.select {|x,y| x.between?(0,7) && y.between?(0,7)}

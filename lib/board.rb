@@ -35,8 +35,18 @@ class Board
     @grid[y][x] = piece
   end
 
-  def move_piece(x,y,piece)
-    pass
+
+  def deep_clone
+    new_board = Board.new
+    grid.each_with_index do |row, y|
+      row.each_with_index do |piece, x|
+        next if piece.nil?
+        new_piece = piece.clone
+        new_board.update_board_square(x,y,new_piece)
+        new_piece.position = [x,y]
+      end
+    end
+    new_board
   end
 
   def array_to_alphanumeric_notation(x,y)

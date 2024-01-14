@@ -35,6 +35,10 @@ class Board
     @grid[y][x] = piece
   end
 
+  def move_piece(x,y,piece)
+    pass
+  end
+
   def array_to_alphanumeric_notation(x,y)
     if x.negative? || y.negative? || x > (grid[0].length - 1) || y > (grid.length - 1)
       raise RangeError, 'Array columns out of range'

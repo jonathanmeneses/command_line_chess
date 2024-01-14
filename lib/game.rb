@@ -18,11 +18,11 @@ class Game
     @black_check = false
   end
 
-  def move_piece(piece, target_move)
+  def move_piece(piece, target_move, board_to_move)
     (target_x, target_y) = target_move
     if valid_move?(piece, target_move)
-      board.update_board_square(piece.position[0], piece.position[1],nil)
-      board.update_board_square(target_x,target_y,piece)
+      board_to_move.update_board_square(piece.position[0], piece.position[1],nil)
+      board_to_move.update_board_square(target_x,target_y,piece)
       piece.position = [target_x, target_y]
     else
       puts "invalid move"
@@ -62,7 +62,7 @@ class Game
 
   def move_place_player_in_check?(piece, target_x, target_y)
     simulated_board = board.clone
-    simulated_board.update_board_square(target_x,target_y,piece)
+    simulated_board.move_piece([target_x, target_y], piece)
     color_in_check?(piece.color,simulated_board)
   end
 

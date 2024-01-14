@@ -98,5 +98,103 @@ describe Game do
     # Similarly, add contexts for other pieces like Knight, Bishop, etc.
   end
 
+  describe '#king_in_check?' do
+    let(:board) { Board.new }
+    let(:game) { Game.new(board) }
+    let(:king) { King.new([0, 0], :white) }
+    let(:pawn) { Pawn.new([1,1], :white) }
+    let(:b_bishop) { Bishop.new([3, 3], :black) }
+    context 'when the king is not in check' do
+      before do
+        game.board.update_board_square(pawn.position[0],pawn.position[1],pawn)
+        game.board.update_board_square(king.position[0],king.position[1],king)
+        game.board.update_board_square(b_bishop.position[0],b_bishop.position[1],b_bishop)
+      end
+
+      it 'returns false' do
+        expect(game.king_in_check?(:white,king,board)).to be false
+      end
+
+      it 'returns false for the wrong team' do
+        expect(game.king_in_check?(:black,king,board)).to be false
+      end
+    end
+
+    context 'when the king is in check' do
+      before do
+        game.board.update_board_square(king.position[0],king.position[1],king)
+        game.board.update_board_square(b_bishop.position[0],b_bishop.position[1],b_bishop)
+      end
+
+      it 'returns true' do
+        expect(game.king_in_check?(:white,king,board)).to be true
+      end
+
+    end
+  end
+
+  describe '#color_in_check?' do
+    let(:board) { Board.new }
+    let(:game) { Game.new(board) }
+    let(:king) { King.new([0, 0], :white) }
+    let(:pawn) { Pawn.new([1,1], :white) }
+    let(:b_bishop) { Bishop.new([3, 3], :black) }
+
+    context 'when the king is not in check' do
+      before do
+        allow(game).to receive(:locate_king).and_return(king)
+        game.board.update_board_square(pawn.position[0],pawn.position[1],pawn)
+        game.board.update_board_square(king.position[0],king.position[1],king)
+        game.board.update_board_square(b_bishop.position[0],b_bishop.position[1],b_bishop)
+      end
+
+      it 'returns false' do
+        expect(game.color_in_check?(:white,board)).to be false
+      end
+
+      it 'returns false for the wrong team' do
+        expect(game.color_in_check?(:black,board)).to be false
+      end
+    end
+
+    context 'when the king is in check' do
+      before do
+        allow(game).to receive(:locate_king).and_return(king)
+        game.board.update_board_square(king.position[0],king.position[1],king)
+        game.board.update_board_square(b_bishop.position[0],b_bishop.position[1],b_bishop)
+      end
+
+      it 'returns true' do
+        expect(game.color_in_check?(:white,board)).to be true
+      end
+
+      it 'returns false for the wrong team' do
+        expect(game.color_in_check?(:black,board)).to be false
+      end
+    end
+
+  end
+
+
+  describe '#move_place_player_in_check?' do
+    let(:board) { Board.new }
+    let(:game) { Game.new(board) }
+    let(:king) { King.new([0, 0], :white) }
+    let(:pawn) { Pawn.new([1,1], :white) }
+    let(:b_bishop) { Bishop.new([3, 2], :black) }
+
+    context 'when a move does place a king in check' do
+      before do
+        game.board.update_board_square(pawn.position[0],pawn.position[1],pawn)
+        game.board.update_board_square(king.position[0],king.position[1],king)
+        game.board.update_board_square(b_bishop.position[0],b_bishop.position[1],b_bishop)
+      end
+
+      it 'returns true' do
+        expect(game.move_place_player_in_check?(king,1,0)).to be true
+      end
+    end
+  end
+
 
 end

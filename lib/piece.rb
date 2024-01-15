@@ -3,7 +3,7 @@
 
 class Piece
 
-  def initialize(position ,color)
+  def initialize(position ,color, board)
     @color = color
     #location is array [x,y] location with [0,0] being "A1"
     @position = position

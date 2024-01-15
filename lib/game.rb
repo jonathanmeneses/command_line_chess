@@ -68,11 +68,36 @@ class Game
     create_simulated_board
     simulated_piece = piece.clone
     move_piece(simulated_piece, [target_x, target_y], simulated_board)
-    color_in_check?(simulated_piece.color,simulated_board)
+    color_in_check?(simulated_piece.color, simulated_board)
   end
 
+  def checkmate?(color)
+    return false unless color_in_check?(color, board)
 
+    board.grid.each do |row|
+      row.each do |cell|
+        if cell_belongs_to_player?(cell, color)
+          if can_piece_escape_check?(cell)
+            return false
+          end
+        end
+      end
+    end
 
+    true
+  end
+
+  def cell_belongs_to_player?(cell, color)
+    !cell.nil? && cell.color == color
+  end
+
+  def can_piece_escape_check?(piece)
+    valid_moves_for_piece(piece).any? { |move| !move_place_player_in_check?(piece, move[0], move[1]) }
+  end
+
+  def valid_moves_for_piece(piece)
+    piece.potential_moves.select { |move| valid_move?(piece, move) }
+  end
 
   def locate_king(color, board)
     board.grid.each do |row|
@@ -148,7 +173,7 @@ class Game
   def straight_path_clear?(piece, target_x, target_y)
     path_range = []
 
-    if piece.position[0] = target_x
+    if piece.position[0] == target_x
       y_mod = target_y > piece.position[1] ? 1 : -1
       steps = (target_y - piece.position[1]).abs
       (1...steps).each do |index|

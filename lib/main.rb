@@ -40,6 +40,6 @@ p game.color_in_check?(:black, game.board)
 # 2.  if a move will remove the moving team from check
 # Restrict moves when in check
 # Determine checkmate
-# 
+#
 # Should I refactor and add valid_moves to return all valid moves for a piece?
 # if so, i could then have valid_move? just run an valid_moves.include?(move)

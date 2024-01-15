@@ -41,3 +41,11 @@ A command line two-player chess game built as part of "The Odin Project" curricu
 1. Add piece type
 2. Add potential moves
 
+## Outstanding items
+1. Stalemate creation
+2. en passant
+3. pawn promotion
+4. castling
+5. need to check if piece capture works
+6. Need to update icons on board
+7. need to update board display

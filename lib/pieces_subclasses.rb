@@ -82,11 +82,11 @@ class Knight < Piece
 end
 
 class Rook < Piece
-  attr_accessor :position, :color
+  attr_accessor :position, :color, :display_icon
 
   def initialize(position, color)
     super(position, color)
-    @display_icon = color == :white ? 'R' : 'R'
+    @display_icon = color == :white ? 'R' : 'r'
   end
 
   def potential_moves()
@@ -126,7 +126,7 @@ class King < Piece
 end
 
 class Queen < Piece
-  attr_accessor :position, :color
+  attr_accessor :position, :color, :display_icon
 
   def initialize(position, color)
     super(position, color)

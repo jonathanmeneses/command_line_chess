@@ -20,7 +20,7 @@ class Game
 
   def move_piece(piece, target_move, board_to_move)
     (target_x, target_y) = target_move
-    if valid_move?(piece, target_move)
+    if valid_move?(piece, target_move, board_to_move)
       board_to_move.update_board_square(piece.position[0], piece.position[1],nil)
       board_to_move.update_board_square(target_x,target_y,piece)
       piece.position = [target_x, target_y]
@@ -29,7 +29,11 @@ class Game
     end
   end
 
-  def valid_move?(piece, target_move)
+  def valid_move?(piece, target_move, board)
+    basic_move_valid?(piece, target_move, board) && !move_results_in_check?(piece, target_move)
+  end
+
+  def basic_move_valid?(piece, target_move, board)
     (target_x, target_y) = target_move
     #checks to build:
     # Obstruction
@@ -39,45 +43,56 @@ class Game
     return piece.potential_moves.include?(target_move) &&
            case piece.class.name
            when 'Pawn'
-             pawn_move_valid?(piece,target_x, target_y)
+             pawn_move_valid?(piece, target_x, target_y, board)
            when 'Knight'
-             knight_move_valid?(piece, target_x, target_y)
+             knight_move_valid?(piece, target_x, target_y, board)
            when 'Bishop'
-             bishop_move_valid?(piece, target_x, target_y)
+             bishop_move_valid?(piece, target_x, target_y, board)
            when 'Rook'
-             rook_move_valid?(piece, target_x, target_y)
+             rook_move_valid?(piece, target_x, target_y, board)
            when 'Queen'
-             queen_move_valid?(piece, target_x, target_y)
+             queen_move_valid?(piece, target_x, target_y, board)
            when 'King'
-             king_move_valid?(piece, target_x, target_y)
+             king_move_valid?(piece, target_x, target_y, board)
            else
              false
            end
+
   end
 
   def color_in_check?(color, board)
     king = locate_king(color, board)
-    king_in_check?(color, king, board)
+    if king_in_check?(color, king, board)
+      puts "#{color} is in check!"
+      true
+    else
+      false
+    end
   end
 
-  def create_simulated_board
+  def simulate_move(piece, target_move)
     @simulated_board = board.deep_clone
-  end
-
-  def move_place_player_in_check?(piece, target_x, target_y)
-    create_simulated_board
     simulated_piece = piece.clone
-    move_piece(simulated_piece, [target_x, target_y], simulated_board)
-    color_in_check?(simulated_piece.color, simulated_board)
+    simulated_piece.position = target_move
+    simulated_board.update_board_square(piece.position[0], piece.position[1], nil)
+    simulated_board.update_board_square(target_move[0], target_move[1], simulated_piece)
+    yield(simulated_board)
   end
 
-  def checkmate?(color)
+  def move_results_in_check?(piece, target_move)
+    simulate_move(piece, target_move) { |simulated_board| color_in_check?(piece.color, simulated_board) }
+  end
+
+  def checkmate?(color, board)
     return false unless color_in_check?(color, board)
 
     board.grid.each do |row|
       row.each do |cell|
         if cell_belongs_to_player?(cell, color)
-          if can_piece_escape_check?(cell)
+          if cell.class.name == 'Queen'
+            # binding.pry
+          end
+          if can_piece_escape_check?(cell, board)
             p cell
             return false
           end
@@ -92,12 +107,13 @@ class Game
     !cell.nil? && cell.color == color
   end
 
-  def can_piece_escape_check?(piece)
-    valid_moves_for_piece(piece).any? { |move| !move_place_player_in_check?(piece, move[0], move[1]) }
+  def can_piece_escape_check?(piece, board)
+    # binding.pry
+    valid_moves_for_piece(piece, board).any? { |move| !move_results_in_check?(piece, move) }
   end
 
-  def valid_moves_for_piece(piece)
-    piece.potential_moves.select { |move| valid_move?(piece, move) }
+  def valid_moves_for_piece(piece, board)
+    piece.potential_moves.select { |move| basic_move_valid?(piece, move, board) }
   end
 
   def locate_king(color, board)
@@ -114,14 +130,14 @@ class Game
   def king_in_check?(color, king, board)
     board.grid.any? do |row|
       row.any? do |piece|
-        !piece.nil? && piece.color != color && valid_move?(piece, king.position)
+        !piece.nil? && piece.color != color && valid_move?(piece, king.position, board)
       end
     end
   end
 
 
 
-  def pawn_forward_move_valid?(piece, target_x, target_y)
+  def pawn_forward_move_valid?(piece, target_x, target_y, board)
     path_range = if piece.color == :white
                    (piece.position[1] + 1)..target_y
                  else
@@ -130,7 +146,7 @@ class Game
     path_range.all? { |y| board.grid[y][target_x].nil? }
   end
 
-  def capture_move_valid?(piece, target_x, target_y)
+  def capture_move_valid?(piece, target_x, target_y, board)
     if board.grid[target_y][target_x]
       if piece.color == :white
         board.grid[target_y][target_x].color == :black
@@ -142,22 +158,22 @@ class Game
     end
   end
 
-  def knight_move_valid?(piece, target_x, target_y)
+  def knight_move_valid?(piece, target_x, target_y, board)
     target_square = board.grid[target_y][target_x]
     target_square.nil? || target_square.color != piece.color
   end
 
-  def bishop_move_valid?(piece, target_x, target_y)
-    diagonal_path_clear?(piece, target_x, target_y) &&
-      (capture_move_valid?(piece, target_x, target_y) || board.grid[target_y][target_x].nil?)
+  def bishop_move_valid?(piece, target_x, target_y, board)
+    diagonal_path_clear?(piece, target_x, target_y, board) &&
+      (capture_move_valid?(piece, target_x, target_y, board) || board.grid[target_y][target_x].nil?)
   end
 
-  def pawn_move_valid?(piece, target_x, target_y)
+  def pawn_move_valid?(piece, target_x, target_y, board)
     # Still need to build en passant
     if piece.position[0] == target_x
-      pawn_forward_move_valid?(piece, target_x, target_y)
+      pawn_forward_move_valid?(piece, target_x, target_y, board)
     elsif (target_x - piece.position[0]).abs == 1 && (target_y - piece.position[1]).abs == 1
-      capture_move_valid?(piece, target_x, target_y)
+      capture_move_valid?(piece, target_x, target_y, board)
       # I think i can also use this for en passant as well, but would need to know about the last move of the piece next to it
       # Also need to check
     else
@@ -165,13 +181,13 @@ class Game
     end
   end
 
-  def rook_move_valid?(piece, target_x, target_y)
+  def rook_move_valid?(piece, target_x, target_y, board)
     # doesn't account for castling
-    straight_path_clear?(piece, target_x, target_y) &&
-      (capture_move_valid?(piece, target_x, target_y) || board.grid[target_y][target_x].nil?)
+    straight_path_clear?(piece, target_x, target_y, board) &&
+      (capture_move_valid?(piece, target_x, target_y, board) || board.grid[target_y][target_x].nil?)
   end
 
-  def straight_path_clear?(piece, target_x, target_y)
+  def straight_path_clear?(piece, target_x, target_y, board)
     path_range = []
 
     if piece.position[0] == target_x
@@ -192,7 +208,7 @@ class Game
     path_range.all? { |x, y|  board.grid[y][x].nil? }
   end
 
-  def diagonal_path_clear?(piece, target_x, target_y)
+  def diagonal_path_clear?(piece, target_x, target_y, board)
     x_mod = target_x > piece.position[0] ? 1 : -1
     y_mod = target_y > piece.position[1] ? 1 : -1
     path_range = []
@@ -202,20 +218,24 @@ class Game
       path_range << [piece.position[0] + (x_mod * index), piece.position[1] + (y_mod * index)]
     end
 
-    path_range.all? { |x, y|  board.grid[y][x].nil? }
+    if path_range.empty?
+      true
+    else
+      path_range.all? { |x, y|  board.grid[y][x].nil? }
+    end
   end
 
-  def queen_move_valid?(piece, target_x, target_y)
+  def queen_move_valid?(piece, target_x, target_y, board)
     path_clear = if piece.position[0] == target_x || piece.position[1] == target_y
-                   straight_path_clear?(piece, target_x, target_y)
+                   straight_path_clear?(piece, target_x, target_y, board)
                  else
-                   diagonal_path_clear?(piece, target_x, target_y)
+                   diagonal_path_clear?(piece, target_x, target_y, board)
                  end
-    path_clear && (capture_move_valid?(piece, target_x, target_y) || board.grid[target_y][target_x].nil?)
+    path_clear && (capture_move_valid?(piece, target_x, target_y, board) || board.grid[target_y][target_x].nil?)
   end
 
-  def king_move_valid?(piece, target_x, target_y)
-    capture_move_valid?(piece, target_x, target_y) || board.grid[target_y][target_x].nil?
+  def king_move_valid?(piece, target_x, target_y, board)
+    capture_move_valid?(piece, target_x, target_y, board) || board.grid[target_y][target_x].nil?
   end
 
 end

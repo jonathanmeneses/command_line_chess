@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'pry-byebug'
+require 'colorize'
 
 # Board class for chess
 class Board
@@ -15,11 +16,13 @@ class Board
   def display_board
     puts '   | A | B | C | D | E | F | G | H |'
     puts '------------------------------------'
-    @grid.reverse.each_with_index do |row, index|
-      row_number = 8 - index
+    @grid.reverse.each_with_index do |row, row_index|
+      row_number = 8 - row_index
       print_view = " #{row_number} |"
-      row.each do |cell|
-        print_view += (cell.nil? ? '   |' : " #{cell.display_icon} |")
+      row.each_with_index do |cell, col_index|
+        background_color = (row_index + col_index).even? ? :light_black : :default
+        cell_content = cell.nil? ? '   ' : " #{cell.display_icon} "
+        print_view += cell_content.colorize(background: background_color) + '|'
       end
       puts print_view
     end

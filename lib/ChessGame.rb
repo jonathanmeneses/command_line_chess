@@ -58,7 +58,7 @@ class ChessGame
 
 
   def game_over?
-    @game.checkmate?(@current_player) # || @game.is_stalemate(@current_player)
+    @game.checkmate?(@current_player, @board) # || @game.is_stalemate(@current_player)
   end
 
   def process_turn
@@ -97,7 +97,7 @@ class ChessGame
 
   def validate_move(piece, move)
     raise 'Invalid move' unless piece && piece.color == @current_player
-    raise 'Invalid move' unless @game.valid_move?(piece, move[:to])
+    raise 'Invalid move' unless @game.valid_move?(piece, move[:to], board)
   end
 
   def switch_player

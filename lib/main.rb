@@ -9,10 +9,13 @@ require_relative '../lib/ChessGame'
 
 game = ChessGame.new
 
+game.play_game
 
-binding.pry
-game.board.display_board
+# board = Board.new
 
+# binding.pry
+
+puts "ok!"
 
 
 #next up:

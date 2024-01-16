@@ -58,8 +58,11 @@ class Board
   end
 
   def alphanumeric_to_array_notation(space)
-    unless space.length == 2 && alpha_map.include?(space[0]) && space[1].to_i < grid.length
+    unless space.length == 2
       raise ArgumentError, 'Alphanumeric space is not 2 characters'
+    end
+    unless alpha_map.include?(space[0]) && space[1].to_i < (1 + grid.length) && space[1].to_i > 0
+      raise ArgumentError, 'Alphanumeric selection out of range'
     end
 
     [alpha_map.index(space[0]), (space[1].to_i - 1)]

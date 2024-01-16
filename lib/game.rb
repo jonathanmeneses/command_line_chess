@@ -78,6 +78,7 @@ class Game
       row.each do |cell|
         if cell_belongs_to_player?(cell, color)
           if can_piece_escape_check?(cell)
+            p cell
             return false
           end
         end
@@ -122,7 +123,7 @@ class Game
 
   def pawn_forward_move_valid?(piece, target_x, target_y)
     path_range = if piece.color == :white
-                   (piece.position[1] + 1)...target_y
+                   (piece.position[1] + 1)..target_y
                  else
                    (target_y + 1)...piece.position[1]
                  end

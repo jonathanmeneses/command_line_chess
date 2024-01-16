@@ -22,7 +22,6 @@ class ChessGame
       begin
         @board.display_board
         break if game_over?
-
         process_turn
 
         switch_player
@@ -51,8 +50,6 @@ class ChessGame
   def place_pieces(back_row, color)
     pieces_order = [Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook]
 
-    # Swap King and Queen for black pieces
-    pieces_order[3], pieces_order[4] = pieces_order[4], pieces_order[3] if color == :black
 
     pieces_order.each_with_index do |piece_class, i|
       @board.update_board_square(i, back_row, piece_class.new([i, back_row], color))
@@ -61,21 +58,41 @@ class ChessGame
 
 
   def game_over?
-    @game.is_checkmate(@current_player) || @game.is_stalemate(@current_player)
+    @game.checkmate?(@current_player) # || @game.is_stalemate(@current_player)
   end
 
   def process_turn
     puts "#{@current_player.capitalize}'s turn."
     move = get_player_move
-    piece = @board.piece_at(move[:from])
+    piece = @board.grid[move[:from][1]][move[:from][0]]
     validate_move(piece, move)
     @game.move_piece(piece, move[:to], @board)
   end
 
   def get_player_move
-    # Get and validate player input for a move
-    # Return the move as a hash with :from and :to coordinates
-    # Example: { from: [0, 1], to: [0, 3] }
+    move = nil
+    loop do
+      puts "Enter your move!"
+
+      begin
+        input = gets.chomp
+        unless input.length == 4
+          raise ArgumentError, "Move should be 4 characters (from:to), provided input is #{input.length}"
+        end
+
+        from = input[0..1]
+        to = input[2..]
+
+        move = { from: @board.alphanumeric_to_array_notation(from),
+                 to: @board.alphanumeric_to_array_notation(to) }
+
+
+        break
+      rescue StandardError => e
+        puts e.message
+      end
+    end
+    move
   end
 
   def validate_move(piece, move)
@@ -88,7 +105,7 @@ class ChessGame
   end
 
   def conclude_game
-    if @game.is_checkmate(@current_player)
+    if @game.checkmate?(@current_player)
       winner = @current_player == :white ? :black : :white
       puts "Checkmate! #{winner.capitalize} wins."
     elsif @game.is_stalemate(@current_player)

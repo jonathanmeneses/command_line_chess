@@ -63,7 +63,6 @@ class Game
   def color_in_check?(color, board)
     king = locate_king(color, board)
     if king_in_check?(color, king, board)
-      puts "#{color} is in check!"
       true
     else
       false
@@ -93,7 +92,6 @@ class Game
             # binding.pry
           end
           if can_piece_escape_check?(cell, board)
-            p cell
             return false
           end
         end

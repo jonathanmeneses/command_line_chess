@@ -10,7 +10,7 @@ class Pawn < Piece
 
   def initialize(position, color)
     super(position, color)
-    @display_icon = color == :white ? 'P' : 'p'
+    @display_icon = color == :white ? '♗' : '♟︎'
   end
 
   def potential_moves()
@@ -44,7 +44,7 @@ class Bishop < Piece
 
   def initialize(position, color)
     super(position, color)
-    @display_icon = color == :white ? 'B' : 'b'
+    @display_icon = color == :white ? '♗' : '♝'
   end
 
   def potential_moves()
@@ -68,7 +68,7 @@ class Knight < Piece
 
   def initialize(position, color)
     super(position, color)
-    @display_icon = color == :white ? 'N' : 'n'
+    @display_icon = color == :white ? '♘' : '♞'
   end
 
   def potential_moves()
@@ -86,7 +86,7 @@ class Rook < Piece
 
   def initialize(position, color)
     super(position, color)
-    @display_icon = color == :white ? 'R' : 'r'
+    @display_icon = color == :white ? '♖' : '♜'
   end
 
   def potential_moves()
@@ -111,7 +111,7 @@ class King < Piece
 
   def initialize(position, color)
     super(position, color)
-    @display_icon = color == :white ? 'K' : 'k'
+    @display_icon = color == :white ? '♔': '♚'
   end
 
   def potential_moves()
@@ -130,7 +130,7 @@ class Queen < Piece
 
   def initialize(position, color)
     super(position, color)
-    @display_icon = color == :white ? 'Q' : 'q'
+    @display_icon = color == :white ? '♕' : '♛'
   end
 
   def potential_moves()

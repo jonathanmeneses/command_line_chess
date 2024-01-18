@@ -19,16 +19,16 @@ class ChessGame
 
   def play_game
     loop do
-      begin
+      # begin
         @board.display_board
         break if game_over?
         process_turn
 
         switch_player
-      rescue StandardError => e
-        puts e.message
-        retry
-      end
+      # rescue StandardError => e
+      #   puts e.message
+      #   retry
+      # end
     end
     conclude_game
   end
@@ -61,7 +61,12 @@ class ChessGame
     @game.checkmate?(@current_player, @board) # || @game.is_stalemate(@current_player)
   end
 
+  def in_check?
+    @game.color_in_check?(@current_player,@board)
+  end
+
   def process_turn
+    puts "#{@current_player.capitalize} is in check!" if in_check?
     puts "#{@current_player.capitalize}'s turn."
     move = get_player_move
     piece = @board.grid[move[:from][1]][move[:from][0]]

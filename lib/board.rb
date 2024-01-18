@@ -14,21 +14,25 @@ class Board
   end
 
   def display_board
-    puts '   | A | B | C | D | E | F | G | H |'
-    puts '------------------------------------'
+    puts '    A  B  C  D  E  F  G  H '
+    puts '----------------------------'
     @grid.reverse.each_with_index do |row, row_index|
       row_number = 8 - row_index
-      print_view = " #{row_number} |"
+      print_view = " #{row_number} "
       row.each_with_index do |cell, col_index|
-        background_color = (row_index + col_index).even? ? :light_black : :default
+        background_color = (row_index + col_index).even? ? :default : :cyan
         cell_content = cell.nil? ? '   ' : " #{cell.display_icon} "
-        print_view += cell_content.colorize(background: background_color) + '|'
+        # Colorize the entire cell content, including the piece's icon
+        print_view += cell_content
+                        .colorize(background: background_color, color: :black)
       end
+      print_view += " #{row_number} "
       puts print_view
     end
-    puts '------------------------------------'
-    puts '   | A | B | C | D | E | F | G | H |'
+    puts '----------------------------'
+    puts '    A  B  C  D  E  F  G  H '
   end
+
 
   def update_board_square(x,y,piece)
     if (x.negative? || y.negative? || x > (grid.length - 1)) || (y > (grid.length - 1))

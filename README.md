@@ -14,38 +14,11 @@ A command line two-player chess game built as part of "The Odin Project" curricu
 
 ## My strategies for development
 
-1. Create the board class
-2. Create a top level "Pieces" Class
-3. Create subclasses for each piece type (inherits from the top level pieces)
-4. Create Game class
-
-### Special Rules to keep in mind
-1. Castling
-2. Double Pawn Move
-3. Pawn Promotion
-4. Castling
-
-
-### Things to define
-1. What is a legal move?
-2. When is something in check
-3. When is something in checkmate
-    a. Checkmate is when there are no valid moves remaining for a team that is in check
-
-### Creating the Pieces Class
-1. Add position
-2. Add color
-
-### Creating the SubPieces Class
-
-1. Add piece type
-2. Add potential moves
-
-## Outstanding items
-1. Stalemate creation
-2. en passant
-3. pawn promotion
-4. castling
-5. need to check if piece capture works
-6. Need to update icons on board
-7. need to update board display
+1. Note that this requires notation style moves. moves should be entered with a 4 character string in the format of [move1][move2], eg. a2a4 would be "moving player piece from a2 to a4"
+2. What is needed for future development:
+    * Add instructions and better "incorrect move" text
+    * Implement en passant logic
+    * Implement pawn promotion logic
+    * implement staelemate game state
+    * visual updates (perhaps turn this into a web chess game)
+    * save and load game states

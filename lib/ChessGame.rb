@@ -2,6 +2,7 @@
 # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/ClassLength, Metrics/CyclomaticComplexity
 
 require 'pry-byebug'
+require 'yaml'
 
 require_relative '../lib/board'
 require_relative '../lib/piece'
@@ -15,6 +16,7 @@ class ChessGame
     @game = Game.new(@board)
     setup_pieces
     @current_player = :white
+    @game_saved = nil
   end
 
   def play_game
@@ -28,8 +30,8 @@ class ChessGame
       # rescue StandardError => e
       #   puts e.message
       #   retry
-      # end
     end
+    binding.pry
     conclude_game
   end
 
@@ -56,9 +58,35 @@ class ChessGame
     end
   end
 
+  def save_game()
+    game_state = {
+      board: @board,
+      game: @game,
+      current_player: @current_player
+    }
+
+    yaml = YAML.dump(game_state)
+    File.write("chess_save.yml",yaml)
+    @game_saved = true
+  end
+
+  def load_game()
+    unless File.exist?("chess_save.yml")
+      puts "No saved game exists!"
+      return nil
+    end
+    yaml_content = File.read("chess_save.yml")
+    file = YAML.safe_load(yaml_content, permitted_classes: [Board, Pawn, Knight, Bishop, Rook, Queen, King, Game, Symbol], aliases:true)
+
+    @game = file[:game]
+    @board = file[:board]
+    @current_player = [:current_player]
+    @game_saved = nil
+    return true
+  end
 
   def game_over?
-    @game.checkmate?(@current_player, @board) # || @game.is_stalemate(@current_player)
+    @game.checkmate?(@current_player, @board) || @game_saved # || @game.is_stalemate(@current_player)
   end
 
   def in_check?
@@ -69,9 +97,15 @@ class ChessGame
     puts "#{@current_player.capitalize} is in check!" if in_check?
     puts "#{@current_player.capitalize}'s turn."
     move = get_player_move
-    piece = @board.grid[move[:from][1]][move[:from][0]]
-    validate_move(piece, move)
-    @game.move_piece(piece, move[:to], @board)
+    if move == 'save'
+      save_game
+    elsif move == 'load'
+      load_game
+    else
+      piece = @board.grid[move[:from][1]][move[:from][0]]
+      validate_move(piece, move)
+      @game.move_piece(piece, move[:to], @board)
+    end
   end
 
   def get_player_move
@@ -81,7 +115,9 @@ class ChessGame
 
       begin
         input = gets.chomp
-        unless input.length == 4
+        if input.downcase == 'save' || input.downcase =='load'
+          return input.downcase
+        elsif input.length != 4
           raise ArgumentError, "Move should be 4 characters (from:to), provided input is #{input.length}"
         end
 
@@ -110,11 +146,13 @@ class ChessGame
   end
 
   def conclude_game
-    if @game.checkmate?(@current_player)
+    if @game.checkmate?(@current_player,@board)
       winner = @current_player == :white ? :black : :white
       puts "Checkmate! #{winner.capitalize} wins."
-    elsif @game.is_stalemate(@current_player)
-      puts "Stalemate! The game is a draw."
+    # elsif @game.is_stalemate(@current_player)
+    #   puts "Stalemate! The game is a draw."
+    else
+      puts "Game Saved!"
     end
   end
 end

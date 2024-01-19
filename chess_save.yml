@@ -1,0 +1,243 @@
+---
+:board: &1 !ruby/object:Board
+  grid:
+  - - !ruby/object:Rook
+      color: :white
+      position:
+      - 0
+      - 0
+      display_icon: "♖"
+    - !ruby/object:Knight
+      color: :white
+      position:
+      - 1
+      - 0
+      display_icon: "♘"
+    - !ruby/object:Bishop
+      color: :white
+      position:
+      - 2
+      - 0
+      display_icon: "♗"
+    - !ruby/object:Queen
+      color: :white
+      position:
+      - 3
+      - 0
+      display_icon: "♕"
+    - !ruby/object:King
+      color: :white
+      position:
+      - 4
+      - 0
+      display_icon: "♔"
+    - !ruby/object:Bishop
+      color: :white
+      position:
+      - 5
+      - 0
+      display_icon: "♗"
+    - !ruby/object:Knight
+      color: :white
+      position:
+      - 6
+      - 0
+      display_icon: "♘"
+    - !ruby/object:Rook
+      color: :white
+      position:
+      - 7
+      - 0
+      display_icon: "♖"
+  - - !ruby/object:Pawn
+      color: :white
+      position:
+      - 0
+      - 1
+      display_icon: "♗"
+    - !ruby/object:Pawn
+      color: :white
+      position:
+      - 1
+      - 1
+      display_icon: "♗"
+    - !ruby/object:Pawn
+      color: :white
+      position:
+      - 2
+      - 1
+      display_icon: "♗"
+    - !ruby/object:Pawn
+      color: :white
+      position:
+      - 3
+      - 1
+      display_icon: "♗"
+    - !ruby/object:Pawn
+      color: :white
+      position:
+      - 4
+      - 1
+      display_icon: "♗"
+    - !ruby/object:Pawn
+      color: :white
+      position:
+      - 5
+      - 1
+      display_icon: "♗"
+    - !ruby/object:Pawn
+      color: :white
+      position:
+      - 6
+      - 1
+      display_icon: "♗"
+    - !ruby/object:Pawn
+      color: :white
+      position:
+      - 7
+      - 1
+      display_icon: "♗"
+  - -
+    -
+    -
+    -
+    -
+    -
+    -
+    -
+  - -
+    -
+    -
+    -
+    -
+    -
+    -
+    -
+  - -
+    -
+    -
+    -
+    -
+    -
+    -
+    -
+  - -
+    -
+    -
+    -
+    -
+    -
+    -
+    -
+  - - !ruby/object:Pawn
+      color: :black
+      position:
+      - 0
+      - 6
+      display_icon: "♟︎"
+    - !ruby/object:Pawn
+      color: :black
+      position:
+      - 1
+      - 6
+      display_icon: "♟︎"
+    - !ruby/object:Pawn
+      color: :black
+      position:
+      - 2
+      - 6
+      display_icon: "♟︎"
+    - !ruby/object:Pawn
+      color: :black
+      position:
+      - 3
+      - 6
+      display_icon: "♟︎"
+    - !ruby/object:Pawn
+      color: :black
+      position:
+      - 4
+      - 6
+      display_icon: "♟︎"
+    - !ruby/object:Pawn
+      color: :black
+      position:
+      - 5
+      - 6
+      display_icon: "♟︎"
+    - !ruby/object:Pawn
+      color: :black
+      position:
+      - 6
+      - 6
+      display_icon: "♟︎"
+    - !ruby/object:Pawn
+      color: :black
+      position:
+      - 7
+      - 6
+      display_icon: "♟︎"
+  - - !ruby/object:Rook
+      color: :black
+      position:
+      - 0
+      - 7
+      display_icon: "♜"
+    - !ruby/object:Knight
+      color: :black
+      position:
+      - 1
+      - 7
+      display_icon: "♞"
+    - !ruby/object:Bishop
+      color: :black
+      position:
+      - 2
+      - 7
+      display_icon: "♝"
+    - !ruby/object:Queen
+      color: :black
+      position:
+      - 3
+      - 7
+      display_icon: "♛"
+    - !ruby/object:King
+      color: :black
+      position:
+      - 4
+      - 7
+      display_icon: "♚"
+    - !ruby/object:Bishop
+      color: :black
+      position:
+      - 5
+      - 7
+      display_icon: "♝"
+    - !ruby/object:Knight
+      color: :black
+      position:
+      - 6
+      - 7
+      display_icon: "♞"
+    - !ruby/object:Rook
+      color: :black
+      position:
+      - 7
+      - 7
+      display_icon: "♜"
+  alpha_map:
+  - a
+  - b
+  - c
+  - d
+  - e
+  - f
+  - g
+  - h
+:game: !ruby/object:Game
+  board: *1
+  simulated_board:
+  playing: true
+  white_check: false
+  black_check: false
+:current_player: :white
